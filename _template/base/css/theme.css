@@ -4,7 +4,7 @@
    基本方針:
    - ベースは 「選んだアクセントカラー(--hsl-accent) + 白 + 黒 + グレー」
    - たまに補色（--hsl-complement）を差し色として使う
-   - スライドタイトル(h2)の背景にアクセントカラーを敲き、「タイトルの場所に色がつく」デザインにする
+   - 各スライドの見出し(h2)がある上部数%を、アクセントカラーで全幅塗りつぶす
 
    テーマ切り替え:
    <html data-theme="blue"> のように data-theme 属性を変えるだけで
@@ -49,6 +49,9 @@
   --hsl-gray-500: #6b7280;
   --hsl-gray-700: #374151;
 
+  /* タイトルバナーの高さ（スライド上部を占める幅） */
+  --hsl-title-bar-height: 84px;
+
   --hsl-font-heading: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   --hsl-font-body: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
 }
@@ -67,7 +70,7 @@
   color: var(--hsl-black);
 }
 
-/* 表紙タイトル: アクセントカラーの下線で目立たせる */
+/* 表紙タイトル: アクセントカラーの下線で目立たせる（バナーにはしない） */
 .reveal h1 {
   font-size: 2.2em;
   border-bottom: 6px solid var(--hsl-accent);
@@ -75,15 +78,32 @@
   display: inline-block;
 }
 
-/* 各スライドの見出し: 背景にアクセントカラーを敲いたラベル風デザイン */
-.reveal h2 {
-  display: inline-block;
-  font-size: 1.3em;
-  color: var(--hsl-white);
+/* ===== 各スライドの見出し(h2)を上部バナー化 =====
+   見出しが先頭にあるスライドだけ、上部に padding を空けて
+   その分をアクセントカラーの帯（h2）で全幅塗りつぶす。
+   表紙（h1のみのセクション）は対象外。
+   :has() を使うため、対象ブラウザはモダンChrome前提
+   （このリポジトリはPDF化もChrome推奨のため方針は一貫している）。 */
+.reveal .slides section:has(> h2:first-child) {
+  padding-top: var(--hsl-title-bar-height);
+}
+
+.reveal .slides section > h2:first-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--hsl-title-bar-height);
+  line-height: var(--hsl-title-bar-height);
+  margin: 0;
+  padding: 0 48px;
   background: var(--hsl-accent);
-  padding: 0.2em 0.6em;
-  border-radius: 6px;
-  margin-bottom: 0.6em;
+  color: var(--hsl-white);
+  font-size: 1.3em;
+  text-align: left;
+  border-radius: 0;
+  box-sizing: border-box;
+  white-space: normal;
 }
 
 .reveal h3 {
@@ -141,8 +161,8 @@
 /* ===== 固定コーナースロット =====
    .reveal .slides の外側（兄弟要素）に置く想定。
    reveal.jsはslides側だけをスケーリングするため、
-   このトリは常に同じサイズで画面の固定位置に表示される
-   （ロゴ・発表者名・日付など、全スライド共通の住所表示に向く）。
+   この3つは常に同じサイズで画面の固定位置に表示される
+   （ロゴ・発表者名・日付など、全スライド共通の常設表示に向く）。
    不要なら index.html 側で <div> ごと削除してよい。 */
 .hsl-topright,
 .hsl-bottomright {
