@@ -1,0 +1,63 @@
+/* html-slides-lab 共通の基礎デザイン
+   reveal.js の white テーマの上に重ねて使う想定。
+   各スライドフォルダで上書きしたい場合は index.html 内で
+   このファイルの後に追加のCSSを読み込めばよい。 */
+
+:root {
+  --hsl-accent: #2563eb;      /* アクセントカラー */
+  --hsl-text: #1f2937;
+  --hsl-bg: #ffffff;
+  --hsl-font-heading: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --hsl-font-body: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+}
+
+.reveal {
+  font-family: var(--hsl-font-body);
+  color: var(--hsl-text);
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  font-family: var(--hsl-font-heading);
+  font-weight: 700;
+  text-transform: none; /* reveal標準の大文字化を無効化 */
+  color: var(--hsl-text);
+}
+
+.reveal h1 {
+  font-size: 2.2em;
+  border-bottom: 4px solid var(--hsl-accent);
+  padding-bottom: 0.2em;
+  display: inline-block;
+}
+
+.reveal h2 {
+  font-size: 1.6em;
+  color: var(--hsl-accent);
+}
+
+.reveal section img {
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+}
+
+.reveal section video {
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.reveal ul,
+.reveal ol {
+  text-align: left;
+}
+
+/* フッターに簡単なロゴ/クレジットを入れたい場合の例 */
+.hsl-footer {
+  position: fixed;
+  bottom: 8px;
+  right: 16px;
+  font-size: 0.4em;
+  opacity: 0.5;
+}
