@@ -60,7 +60,81 @@ reveal.jsを選んだ理由は、生成AIに「1枚のHTMLスライドを書い�
 
 使わない場合は `index.html` 側でその `<div>` ごと削除すればよい。
 
-## PDF化の手順（MVP）
+## プロンプト例
+
+そのままコピーして使える依頼文のテンプレート。**まずリポジトリのどのファイルを読ませるか**を
+明示するのがコツで、これを省くとAIがフォーマットを自己流に作り直してしまう。
+
+### 新しいスライドを1本作る
+
+```
+html-slides-lab リポジトリでスライドを1本作ります。
+
+1. docs-internal/DRAFT_FORMAT.md を読んでフォーマットを把握してください
+2. 2026/feature-showcase/ を 2026/<スライド名>/ にコピーしてください
+3. index.html の <title>、表紙の <h1>/<p>、.hsl-footer を差し替えてください
+4. draft.md は中身を全部消して、以下の内容で書き直してください
+
+テーマ: <発表テーマ>
+聴衆: <誰向けか>
+時間: <N>分（スライド<N>枚程度）
+構成: 導入 → <本編の柱を3つ> → まとめ
+```
+
+### 原稿だけ直す（いちばん使う）
+
+```
+2026/<スライド名>/draft.md の「<見出し名>」のスライドを、
+docs-internal/DRAFT_FORMAT.md のフォーマットのまま以下に差し替えてください。
+index.html は触らないでください。
+
+<新しい内容>
+```
+
+`index.html は触らないでください` の一文がデザイン崩れの事故をほぼ無くす。
+
+### 図を描かせる
+
+```
+draft.md の「<見出し名>」のスライドに、以下の流れを表すSVG図を追加してください。
+- viewBox="0 0 760 160"、幅は style="width:100%;max-width:700px;"
+- 配色は theme.css のアクセントカラー（#2563eb / #1e3a8a）と #111827 のみ使う
+- 図: <A> → <B> → <C>
+```
+
+SVGはテキストなのでAIが直接書けて、`draft.md` にそのまま貼れる。ラスタ画像より修正依頼が通りやすい。
+
+### 分量を調整する
+
+```
+draft.md が<N>枚あり、<M>分の発表には多すぎます。
+「<残したい柱>」を残し、それ以外を統合して<M>枚に削ってください。
+削った内容のうち重要なものは Note: のスピーカーノートに移してください。
+```
+
+「削って」だけだと情報が消えるが、「ノートに移して」を付けると口頭補足用に残る。
+
+### 配色を変える
+
+```
+2026/<スライド名>/index.html の <html data-theme="blue"> を green に変えてください。
+```
+
+新しい配色そのものを足したい場合のみ `_template/base/css/theme.css` に
+`[data-theme="名前"] { --hsl-accent: ...; --hsl-complement: ...; }` を追加させる。
+
+### AIへの依頼で避けること
+
+| やりがちなこと | 何が起きるか | 代わりに |
+|---|---|---|
+| 「かっこいいスライドを作って」 | 独自CSSを大量生成しテーマと衝突する | テーマ機構を読ませ「既存のクラスだけ使って」と指定する |
+| 1プロンプトで全20枚を作らせる | 後半になるほど構成が崩れる | 導入／本編3〜5枚ずつ／まとめに分割する |
+| HTMLとMarkdownを同時に直させる | 変更箇所が追えず崩れの原因が特定できない | 原稿モードとデザインモードを1依頼1モードに分ける |
+| 画像パスを推測させる | 存在しないファイルを参照して壊れる | `assets/ファイル名` と実ファイル名を明示する |
+
+## PDF化の手順
+
+### 手動（MVP・追加インストール不要）
 
 1. GitHub PagesでスライドURLを開く
 2. URL末尾に `?pdf` を追加してアクセス（例: `.../index.html?pdf`）
@@ -68,8 +142,51 @@ reveal.jsを選んだ理由は、生成AIに「1枚のHTMLスライドを書い�
 
 （`?pdf`は内部的に reveal.js が判定に使う `print-pdf` というクエリ文字列へ自動的に書き換えられる仕組みをテンプレートに組み込み済み）
 
+### 自動（Phase2・CI）
+
+main に push すると `.github/workflows/export.yml` が走り、Decktape（headless Chrome）で
+全スライドをPDF化して `exports/YYYY/スライド名.pdf` にコミットする。
+ローカルで試す場合は `node tools/export/export-pdf.mjs`。詳細は
+[tools/export/README.md](../tools/export/README.md)。
+
+## PPTX変換の手順（Phase2）
+
+```bash
+pip install pymupdf python-pptx
+python tools/export/pdf_to_pptx.py exports
+```
+
+PDFの各ページをPyMuPDFで画像化し、`python-pptx` で1ページ=1スライドのPPTXに詰める。
+GitHub Actionsからは `Export slides` を手動実行し `PPTXも生成する` にチェックを入れる。
+
+**画像PPTXになる**ため、PowerPoint上でテキストは編集できない。配布・共有には十分だが、
+PowerPointで作り込む必要がある資料は最初からPowerPointで作ったほうが早い。
+
+Googleスライドに持っていく場合は、PDF/PPTXをGoogleドライブにアップロードし、
+右クリック →「アプリで開く」→ Googleスライド。
+
+## ハマりどころ
+
+### `_template/` が GitHub Pages で 404 になる（重要）
+GitHub Pages は既定で Jekyll を通すため、**`_` で始まるディレクトリが公開対象から除外される**。
+全スライドが参照する `_template/base/css/theme.css` が404になり、
+「ローカルでは正しく見えるのに公開サイトだけデザインが当たらない」という状態になる。
+リポジトリ直下の空ファイル `.nojekyll` で Jekyll を無効化して回避している。**消さないこと。**
+
+### theme.css を直したのにブラウザに反映されない
+各 `index.html` は `theme.css?v=3` のようにバージョンクエリを付けて読み込んでいる。
+CSSを大きく変えたらこの数字を上げ、全 `index.html` で揃える（`grep -rn "theme.css?v=" --include=index.html .`）。
+
+### タイトルバナーが出ない
+`theme.css` のバナーは CSS の `:has()` セレクタを使っているため、モダンな Chrome / Edge / Safari が前提。
+また `<h2>` が `<section>` の**先頭要素**である必要がある（`draft.md` では `##` をスライドの1行目に書く）。
+スライド属性コメント `<!-- .slide: ... -->` は `##` より前に書いても先頭要素判定には影響しない。
+
+### PDFでフラグメントがページ数を増やす
+Decktape は既定で `class="fragment"` の1ステップを1ページとして出力する。
+配布用に1スライド1ページへまとめたい場合は、そのスライドのフラグメントを外す。
+
 ## 今後追記していくこと
 
-- PPTX変換（Decktape + python-pptx）の具体的な手順
-- 動画出力（Playwright + ffmpeg）の具体的な手順
-- 実際に生成AIに投げたプロンプト例のログ
+- 動画出力（Playwright + ffmpeg）の具体的な手順（Phase3）
+- ブラウザ上編集（github.dev運用）で不便だった点のログ（Phase3）
