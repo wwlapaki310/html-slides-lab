@@ -33,18 +33,23 @@ jobs:
   export:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '20'
+
+      # theme.css は Noto Sans JP をWebフォントで読み込むが、
+      # フォント取得に失敗してもPDFが豆腐にならないようOS側にも入れておく。
+      - name: Install Japanese fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
 
       - name: Generate PDFs with Decktape
         run: node tools/export/export-pdf.mjs
 
       - name: Set up Python
         if: inputs.pptx
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -55,7 +60,7 @@ jobs:
           python tools/export/pdf_to_pptx.py exports
 
       - name: Upload as workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: slides-export
           path: exports/

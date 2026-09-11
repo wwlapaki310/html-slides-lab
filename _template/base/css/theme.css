@@ -1,3 +1,9 @@
+/* 日本語Webフォント。
+   ローカルフォント頼みだと、headless Chrome(CI)のように日本語フォントを持たない
+   環境でPDFが全部豆腐(□)になるため、Webフォントを明示的に読み込む。
+   @import はCSSの先頭に置く必要がある。 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
 /* html-slides-lab 共通のデザインシステム
    reveal.js の white テーマの上に重ねて使う想定。
 
@@ -52,8 +58,10 @@
   /* タイトルバナーの高さ（スライド上部を占める幅） */
   --hsl-title-bar-height: 84px;
 
-  --hsl-font-heading: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-  --hsl-font-body: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  /* Noto Sans JPを先頭に置き、どの環境でも同じ字形になるようにする */
+  --hsl-font-heading: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  --hsl-font-body: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  --hsl-font-mono: ui-monospace, SFMono-Regular, Consolas, 'Courier New', 'Noto Sans JP', monospace;
 }
 
 .reveal {
@@ -85,6 +93,12 @@
    :has() を使うため、対象ブラウザはモダンChrome前提
    （このリポジトリはPDF化もChrome推奨のため方針は一貫している）。 */
 .reveal .slides section:has(> h2:first-child) {
+  /* height:100% が必須。reveal.jsの center:true は
+     「(スライド高 - セクション高) / 2」だけセクションを下げるため、
+     高さを指定しないとバナー(top:0)がスライド中央付近に浮いてしまう。
+     セクションを全高にすると下げ幅が0になり、バナーが上端に張り付く。 */
+  height: 100%;
+  box-sizing: border-box;
   padding-top: var(--hsl-title-bar-height);
 }
 
@@ -122,6 +136,16 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+/* タイトルバナー付きスライドでは、バナーと本文の分だけ画像・動画の高さを抑える。
+   これがないと縦長の画像で本文がスライド外にはみ出して切れる。 */
+.reveal .slides section:has(> h2:first-child) img,
+.reveal .slides section:has(> h2:first-child) video,
+.reveal .slides section:has(> h2:first-child) iframe {
+  max-height: 60%;
+  width: auto;
+  max-width: 100%;
+}
+
 .reveal ul,
 .reveal ol {
   text-align: left;
@@ -139,6 +163,12 @@
   box-shadow: none;
   width: auto;
   font-style: normal;
+}
+
+.reveal code,
+.reveal pre {
+  /* インラインコードに日本語が混ざっても豆腐にならないようフォールバックを持たせる */
+  font-family: var(--hsl-font-mono);
 }
 
 .reveal code {
