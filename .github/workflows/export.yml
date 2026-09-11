@@ -1,0 +1,74 @@
+name: Export slides (PDF / PPTX)
+
+# スライドを更新して push すると、Decktape で PDF を生成し exports/ にコミットする。
+# 生成物は GitHub Pages からもそのまま参照できる:
+#   https://wwlapaki310.github.io/html-slides-lab/exports/2026/sample-slide.pdf
+#
+# 自動コミットを止めたい場合は、最後の「Commit exports」ステップを削除すれば
+# Artifacts へのアップロードだけが残る。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '20[0-9][0-9]/**'
+      - '_template/**'
+      - 'tools/export/**'
+      - '.github/workflows/export.yml'
+  workflow_dispatch:
+    inputs:
+      pptx:
+        description: 'PPTXも生成する'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: export-slides
+  cancel-in-progress: true
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate PDFs with Decktape
+        run: node tools/export/export-pdf.mjs
+
+      - name: Set up Python
+        if: inputs.pptx
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate PPTXs
+        if: inputs.pptx
+        run: |
+          pip install pymupdf python-pptx
+          python tools/export/pdf_to_pptx.py exports
+
+      - name: Upload as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: slides-export
+          path: exports/
+          if-no-files-found: error
+
+      - name: Commit exports
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add exports/
+          if git diff --cached --quiet; then
+            echo 'exports/ に変更はありません'
+            exit 0
+          fi
+          git commit -m 'chore(export): スライドのPDF/PPTXを自動生成 [skip ci]'
+          git push
