@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>サンプルスライド | html-slides-lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme" />
+  <link rel="stylesheet" href="../../_template/base/css/theme.css" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>html-slides-lab</h1>
+        <p>動作確認用のサンプルスライドです</p>
+      </section>
+
+      <section>
+        <h2>このリポジトリの使い方</h2>
+        <ul>
+          <li><code>_template/base/</code> をコピーして新しいスライドを作る</li>
+          <li>年度フォルダ（例: <code>2026/</code>）の下にスライドフォルダを作る</li>
+          <li>画像・動画は各スライドフォルダの <code>assets/</code> に置く</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>操作方法</h2>
+        <p>← → キーでページ送り、F でフルスクリーン、S でスピーカーノート表示</p>
+        <p>URL末尾に <code>?print-pdf</code> を付けてChromeで印刷するとPDF化できます</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      controls: true,
+      progress: true,
+      center: true,
+      transition: 'slide',
+      plugins: [ RevealNotes ]
+    });
+  </script>
+</body>
+</html>
