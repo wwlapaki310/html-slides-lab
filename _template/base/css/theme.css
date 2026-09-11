@@ -61,8 +61,10 @@
   /* バナー付きスライドでの画像・動画の最大高さ。
      reveal.js既定のスライド高700px からバナー84pxと本文の余白を引いた値。
      パーセント指定にすると、Markdownの ![]() が <p><img></p> になり
-     親<p>の高さがautoで解決できず効かないため、絶対値で指定する。 */
-  --hsl-media-max-height: 430px;
+     親<p>の高さがautoで解決できず効かないため、絶対値で指定する。
+     360pxは、本文キャプションが3〜4行入っても収まる実測値
+     （YouTube埋め込みの既定高360pxとも一致する）。 */
+  --hsl-media-max-height: 360px;
 
   /* Noto Sans JPを先頭に置き、どの環境でも同じ字形になるようにする */
   --hsl-font-heading: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;

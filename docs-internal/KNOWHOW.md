@@ -203,7 +203,8 @@ reveal.js の `center: true` は「(スライド高 − セクション高) / 2�
 
 ### 画像スライドが縦にはみ出して文字が切れる
 バナー付きスライドは上部84pxを使うため、画像が大きいと本文がスライド外に出る。
-`theme.css` の `--hsl-media-max-height`（既定430px）で `img / video / iframe` の高さを抑えている。
+`theme.css` の `--hsl-media-max-height`（既定360px）で `img / video / iframe` の高さを抑えている。
+360pxは本文キャプションが3〜4行入っても収まる実測値で、YouTube埋め込みの既定高とも一致する。
 
 ここを `max-height: 60%` のようなパーセントで書くと**効かない**。
 Markdownの `![]()` は `<p><img></p>` に展開され、親 `<p>` の高さが `auto` のため
