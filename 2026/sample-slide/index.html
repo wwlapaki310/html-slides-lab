@@ -7,7 +7,8 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme" />
-  <link rel="stylesheet" href="../../_template/base/css/theme.css?v=2" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="../../_template/base/css/theme.css?v=3" />
 
   <script>
     (function () {
@@ -48,6 +49,7 @@
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
   <script>
     Reveal.initialize({
       hash: true,
@@ -55,7 +57,7 @@
       progress: true,
       center: true,
       transition: 'slide',
-      plugins: [ RevealMarkdown, RevealNotes ]
+      plugins: [ RevealMarkdown, RevealNotes, RevealHighlight ]
     });
   </script>
 </body>

@@ -12,7 +12,7 @@ Note:
 
 ## 見出し2（画像）
 
-![サンプル画像](assets/sample-image.png)
+![サンプル画像](assets/sample-image.svg)
 
 ---
 
@@ -20,10 +20,13 @@ Note:
 
 data-markdownはHTMLタグをそのまま透過するので、
 動画などはHTMLタグで直接書いてよい。
+`assets/` に動画ファイルを置いたら、下のコードをそのまま貼る。
 
+```html
 <video data-autoplay controls style="max-height: 400px;">
   <source src="assets/sample-video.mp4" type="video/mp4" />
 </video>
+```
 
 ---
 
