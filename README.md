@@ -3,6 +3,9 @@
 生成AIで作ったHTMLスライドを、年度別フォルダで蓄積していくリポジトリです。
 GitHub Pagesで各スライドをそのままブラウザ閲覧・プレゼン発表できます。
 
+**公開トップページ: https://wwlapaki310.github.io/html-slides-lab/**
+（スライドを追加すると、CIが年度別の索引ページを自動生成します）
+
 - 要件定義: [docs-internal/REQUIREMENTS.md](docs-internal/REQUIREMENTS.md)
 - 原稿(draft.md)フォーマット仕様: [docs-internal/DRAFT_FORMAT.md](docs-internal/DRAFT_FORMAT.md)
 - 生成AIノウハウ集: [docs-internal/KNOWHOW.md](docs-internal/KNOWHOW.md)
@@ -25,6 +28,7 @@ GitHub Pagesで各スライドをそのままブラウザ閲覧・プレゼン�
 ```
 html-slides-lab/
 ├── README.md              # この索引
+├── index.html             # 公開トップページ（CIが自動生成・手で編集しない）
 ├── .nojekyll              # Jekyll無効化（_template/ を公開するために必須・消さないこと）
 ├── docs-internal/         # 要件・原稿フォーマット・ノウハウ等の内部ドキュメント
 ├── _template/base/        # 新規スライド作成用のベーステンプレート（index.html + draft.md）
@@ -41,6 +45,9 @@ html-slides-lab/
 3. 表紙やデザインを凝りたいスライドは `index.html` 内に直接 `<section>` を書く
 4. 画像・動画は同フォルダの `assets/` に置いて相対パスで参照する
 5. GitHub Pagesの公開URL（`https://wwlapaki310.github.io/html-slides-lab/YYYY/スライド名/`）をこのREADMEの表に追記する
+
+pushすればCIが公開トップページ（`index.html`）とPDFを自動生成するので、
+そちらは手で更新する必要はない。索引の見出しには各`index.html`の`<title>`が使われる。
 
 ## PDF / PPTX 出力
 

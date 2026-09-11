@@ -6,6 +6,7 @@
 |---|---|---|
 | `export-pdf.mjs` | 全スライドを Decktape で PDF 化して `exports/` に出力 | Node.js 18+（decktapeはnpxで自動取得） |
 | `pdf_to_pptx.py` | PDFの各ページを画像化し、1ページ=1スライドのPPTXに変換 | `pip install pymupdf python-pptx` |
+| `build-index.mjs` | `YYYY/*/index.html` を走査し、公開トップページ（ルートの`index.html`）を生成 | Node.js 18+ |
 
 CI（[`.github/workflows/export.yml`](../../.github/workflows/export.yml)）が push をトリガーに
 `export-pdf.mjs` を実行し、生成物を `exports/` にコミットする。
@@ -22,7 +23,14 @@ node tools/export/export-pdf.mjs 2026/sample-slide
 # PDF -> PPTX
 pip install pymupdf python-pptx
 python tools/export/pdf_to_pptx.py exports
+
+# 公開トップページ（索引）を再生成
+node tools/export/build-index.mjs
 ```
+
+ルートの `index.html` は `build-index.mjs` の生成物なので、**手で編集しない**。
+索引の見出しには各スライドの `<title>` が使われるため、タイトルを変えたい場合は
+そのスライドの `index.html` の `<title>` を直す。
 
 出力は `exports/2026/sample-slide.pdf` のように、スライドのフォルダ構成をそのまま反映する。
 

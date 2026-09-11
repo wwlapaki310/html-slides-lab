@@ -86,6 +86,7 @@ html-slides-lab/
 │       ├── draft.md
 │       └── assets/
 ├── 2027/                      # 年度が増えたら追加
+├── index.html                 # 公開トップページ（CIが自動生成・手で編集しない）
 ├── exports/                   # CIが生成するPDF/PPTX（YYYY/スライド名.pdf）
 ├── tools/
 │   └── export/                # PDF/PPTX変換スクリプト（export-pdf.mjs / pdf_to_pptx.py）
@@ -105,6 +106,8 @@ GitHub Pagesは既定でJekyllを通すため、**`_`で始まるディレクト
 ## 5. README（索引）の運用ルール
 - 新しいスライドを追加したら、README.mdの表に1行追記する（年度・タイトル・公開URL・作成日）
 - 年度ごとに見出し（`## 2026`）を分けて一覧化する
+- 公開トップページ（ルートの`index.html`）はCIが`tools/export/build-index.mjs`で自動生成する。
+  `YYYY/*/index.html`を走査し、各HTMLの`<title>`を見出しにするため、手での二重管理は不要
 
 ## 6. 今後のTODO
 - [x] GitHub Pagesを有効化（Settings → Pages → main branch / root）

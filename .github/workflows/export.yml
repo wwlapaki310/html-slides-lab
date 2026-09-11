@@ -47,6 +47,10 @@ jobs:
       - name: Generate PDFs with Decktape
         run: node tools/export/export-pdf.mjs
 
+      # PDFが出揃ってから索引を作る（PDFリンクの有無を見て出し分けるため）
+      - name: Build index page
+        run: node tools/export/build-index.mjs
+
       - name: Set up Python
         if: inputs.pptx
         uses: actions/setup-python@v6
@@ -70,10 +74,10 @@ jobs:
         run: |
           git config user.name  'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add exports/
+          git add exports/ index.html
           if git diff --cached --quiet; then
             echo 'exports/ に変更はありません'
             exit 0
           fi
-          git commit -m 'chore(export): スライドのPDF/PPTXを自動生成 [skip ci]'
+          git commit -m 'chore(export): スライドのPDF/PPTXとトップページ索引を自動生成 [skip ci]'
           git push
