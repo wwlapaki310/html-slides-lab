@@ -58,12 +58,15 @@
   /* タイトルバナーの高さ（スライド上部を占める幅） */
   --hsl-title-bar-height: 84px;
 
+  /* 本文の左右余白。バナーは全幅のまま、本文だけこの分だけ内側に入る */
+  --hsl-slide-padding-x: 56px;
+
   /* バナー付きスライドでの画像・動画の最大高さ。
      reveal.js既定のスライド高700px からバナー84pxと本文の余白を引いた値。
      パーセント指定にすると、Markdownの ![]() が <p><img></p> になり
      親<p>の高さがautoで解決できず効かないため、絶対値で指定する。
      360pxは、本文キャプションが3〜4行入っても収まる実測値
-     （YouTube埋め込みの既定高360pxとも一致する）。 */
+     （スライド高720pxのちょうど半分、YouTube埋め込みの既定高とも一致）。 */
   --hsl-media-max-height: 360px;
 
   /* Noto Sans JPを先頭に置き、どの環境でも同じ字形になるようにする */
@@ -75,6 +78,15 @@
 .reveal {
   font-family: var(--hsl-font-body);
   color: var(--hsl-black);
+}
+
+/* index.html 側で margin:0 にしてスライドを画面いっぱいに広げているため、
+   本文の左右余白はここで持つ。
+   タイトルバナー(h2)は position:absolute で、絶対配置の基準はセクションの
+   パディングボックスになるため、この padding の影響を受けず全幅のまま。 */
+.reveal .slides section {
+  padding-left: var(--hsl-slide-padding-x);
+  padding-right: var(--hsl-slide-padding-x);
 }
 
 .reveal h1,
@@ -118,7 +130,7 @@
   height: var(--hsl-title-bar-height);
   line-height: var(--hsl-title-bar-height);
   margin: 0;
-  padding: 0 48px;
+  padding: 0 var(--hsl-slide-padding-x);
   background: var(--hsl-accent);
   color: var(--hsl-white);
   font-size: 1.3em;
@@ -217,6 +229,8 @@
   max-width: 160px;
   pointer-events: none;
 }
+/* 注意: スライドが全幅になったため、右上スロットはタイトルバナーに重なる。
+   バナーの下に出したい場合は top を calc(var(--hsl-title-bar-height) + 16px) にする。 */
 .hsl-topright { top: 16px; right: 16px; }
 .hsl-bottomright { bottom: 16px; right: 16px; }
 .hsl-topright img,

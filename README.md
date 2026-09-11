@@ -49,6 +49,17 @@ html-slides-lab/
 pushすればCIが公開トップページ（`index.html`）とPDFを自動生成するので、
 そちらは手で更新する必要はない。索引の見出しには各`index.html`の`<title>`が使われる。
 
+## ローカルで確認する
+
+`index.html` を `file://` で直接開くと、ブラウザの制限で `draft.md` を読み込めず
+**表紙1枚しか表示されず、ページ送りもできない**。必ずHTTP経由で開くこと。
+
+```bash
+# リポジトリのルートで実行
+python -m http.server 8000
+# → http://localhost:8000/2026/スライド名/ を開く
+```
+
 ## PDF / PPTX 出力
 
 **自動（推奨）**: main に push すると CI（[export.yml](.github/workflows/export.yml)）が Decktape で

@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
 
   <!-- このリポジトリ共通の基礎デザイン（配色・タイトルバナー・コーナースロット） -->
-  <link rel="stylesheet" href="../../_template/base/css/theme.css?v=6" />
+  <link rel="stylesheet" href="../../_template/base/css/theme.css?v=7" />
 
   <script>
     // ?pdf で開いた場合に reveal.js の print-pdf 判定用へURLを書き換える。
@@ -26,6 +26,25 @@
         window.history.replaceState(null, '', newUrl);
       }
     })();
+  </script>
+
+  <script>
+    // file:// で直接開くと、ブラウザのセキュリティ制限で draft.md を fetch できず、
+    // 本編スライドが丸ごと空になって「表紙1枚しか出ない／ページ送りできない」状態になる。
+    // 原因がすぐ分かるよう画面に警告を出す。
+    // ローカル確認は必ずHTTP経由で: python -m http.server 8000 （リポジトリルートで実行）
+    if (window.location.protocol === 'file:') {
+      window.addEventListener('DOMContentLoaded', function () {
+        var el = document.createElement('div');
+        el.style.cssText = 'position:fixed;z-index:9999;top:0;left:0;right:0;padding:14px 18px;'
+          + 'background:#dc2626;color:#fff;font:14px/1.6 sans-serif;text-align:left;';
+        el.innerHTML = '<strong>file:// で開いています。</strong> '
+          + 'この方法では draft.md を読み込めないため、表紙しか表示されずページ送りもできません。<br>'
+          + 'リポジトリのルートで <code>python -m http.server 8000</code> を実行し、'
+          + 'http://localhost:8000/ 経由で開いてください（公開URLならそのままで動きます）。';
+        document.body.appendChild(el);
+      });
+    }
   </script>
 </head>
 <body>
@@ -86,6 +105,13 @@
       progress: true,
       center: true,
       transition: 'slide',
+      // 16:9 + margin:0 でスライドを画面いっぱいに広げる。
+      // 既定の 960x700 / margin:0.04 だと16:9の画面・PDFで左右に白帯が出るうえ、
+      // タイトルバナーがスライド幅までしか伸びず全幅にならない。
+      // 本文の余白は theme.css 側の padding で持たせている。
+      width: 1280,
+      height: 720,
+      margin: 0,
       // PDF化: URL末尾に "?pdf" を付けてChromeで印刷→PDF保存
       plugins: [ RevealMarkdown, RevealNotes, RevealHighlight ]
     });
