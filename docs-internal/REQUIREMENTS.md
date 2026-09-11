@@ -8,7 +8,7 @@
 | # | 要望 | 分類 | 優先度 | 状況 |
 |---|------|------|--------|------|
 | 1 | 複数スライドをフォルダごとに格納 | 構成 | MVP | 完了 |
-| 2 | GitHub Pagesで閲覧可能 | 公開 | MVP | Pages設定待ち |
+| 2 | GitHub Pagesで閲覧可能 | 公開 | MVP | 完了 |
 | 3 | 年度ごとにフォルダを分け、階層構造にする | 構成 | MVP | 完了 |
 | 4 | READMEに索引を置く | 公開 | MVP | 完了 |
 | 5 | 生成AIでHTMLスライドを作るノウハウ調査 | 調査 | MVP | 完了(初版) |
@@ -97,7 +97,7 @@ html-slides-lab/
 - 年度ごとに見出し（`## 2026`）を分けて一覧化する
 
 ## 6. 今後のTODO
-- [ ] GitHub Pagesを有効化（Settings → Pages → main branch / root）
+- [x] GitHub Pagesを有効化（Settings → Pages → main branch / root）
 - [x] `_template/base` の実装
 - [x] サンプルスライド `2026/sample-slide` の作成
 - [x] README.mdの索引フォーマット確定
