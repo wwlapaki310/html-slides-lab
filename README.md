@@ -4,6 +4,7 @@
 GitHub Pagesで各スライドをそのままブラウザ閲覧・プレゼン発表できます。
 
 - 要件定義: [docs-internal/REQUIREMENTS.md](docs-internal/REQUIREMENTS.md)
+- 原稿(draft.md)フォーマット仕様: [docs-internal/DRAFT_FORMAT.md](docs-internal/DRAFT_FORMAT.md)
 - 生成AIノウハウ集: [docs-internal/KNOWHOW.md](docs-internal/KNOWHOW.md)
 - 新規スライドの作り方: [`_template/base/`](_template/base/) をコピーして使う
 
@@ -22,9 +23,9 @@ GitHub Pagesで各スライドをそのままブラウザ閲覧・プレゼン�
 ```
 html-slides-lab/
 ├── README.md              # この索引
-├── docs-internal/         # 要件・ノウハウ等の内部ドキュメント
-├── _template/base/        # 新規スライド作成用のベーステンプレート
-├── 2026/                  # 年度別フォルダ（スライドごとに1フォルダ）
+├── docs-internal/         # 要件・原稿フォーマット・ノウハウ等の内部ドキュメント
+├── _template/base/        # 新規スライド作成用のベーステンプレート（index.html + draft.md）
+├── 2026/                  # 年度別フォルダ（スライドごとに1フォルダ、index.html + draft.md）
 ├── tools/export/          # PDF/PPTX変換スクリプト（Phase2）
 └── .github/workflows/     # 自動化CI（Phase2）
 ```
@@ -32,9 +33,15 @@ html-slides-lab/
 ## 使い方（新しいスライドを作る）
 
 1. `_template/base/` を `YYYY/スライド名/` にコピーする
-2. `index.html` の内容を生成AIと一緒に編集する
-3. 画像・動画は同フォルダの `assets/` に置いて相対パスで参照する
-4. GitHub Pagesの公開URL（`https://wwlapaki310.github.io/html-slides-lab/YYYY/スライド名/`）をこのREADMEの表に追記する
+2. 本編のテキストは `draft.md` を生成AIと一緒に編集する（フォーマットは[DRAFT_FORMAT.md](docs-internal/DRAFT_FORMAT.md)を参照）
+3. 表紙やデザインを凝りたいスライドは `index.html` 内に直接 `<section>` を書く
+4. 画像・動画は同フォルダの `assets/` に置いて相対パスで参照する
+5. GitHub Pagesの公開URL（`https://wwlapaki310.github.io/html-slides-lab/YYYY/スライド名/`）をこのREADMEの表に追記する
+
+## PDF出力
+
+公開URLの末尾に `?pdf` を付けてChromeで開き、印刷（Ctrl/Cmd+P）→「PDFに保存」を選ぶ。
+（例: `https://wwlapaki310.github.io/html-slides-lab/2026/sample-slide/?pdf`）
 
 ## GitHub Pages
 

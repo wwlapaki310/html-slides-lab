@@ -13,34 +13,49 @@
 
   <!-- このリポジトリ共通の基礎デザイン -->
   <link rel="stylesheet" href="../../_template/base/css/theme.css" />
+
+  <script>
+    // ?pdf で開いた場合に reveal.js の print-pdf 判定用へURLを書き換える。
+    // reveal.js は window.location.search に "print-pdf" という文字列が
+    // 含まれるかどうかで印刷用スタイルを切り替える実装のため、
+    // 覚えやすい "?pdf" を透過的に "print-pdf" へ変換している。
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      if (params.has('pdf') && !/print-pdf/i.test(window.location.search)) {
+        params.delete('pdf');
+        params.set('print-pdf', '');
+        var qs = params.toString();
+        var newUrl = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+        window.history.replaceState(null, '', newUrl);
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
-      <!-- 表紙 -->
+      <!-- 表紙: デザインにこだわりたいスライドは生HTMLで直接書く -->
       <section>
         <h1>スライドタイトル</h1>
         <p>サブタイトル・発表者名・日付など</p>
       </section>
 
-      <!-- テキストスライド -->
-      <section>
-        <h2>見出し</h2>
-        <ul>
-          <li>ポイント1</li>
-          <li>ポイント2</li>
-          <li>ポイント3</li>
-        </ul>
+      <!-- 本編: 同じフォルダの draft.md（原稿）を自動で読み込んでスライド化する -->
+      <section data-markdown="draft.md"
+                data-separator="^\n---\n$"
+                data-separator-vertical="^\n----\n$"
+                data-separator-notes="^Note:"
+                data-charset="utf-8">
       </section>
 
-      <!-- 画像を貼るスライド -->
+      <!-- 画像を大きく見せたい等、レイアウトを凝りたいスライドは生HTMLで追加してもよい -->
       <section>
-        <h2>画像の例</h2>
+        <h2>画像の例（レイアウトを凝る場合）</h2>
         <img src="assets/sample-image.png" alt="説明テキスト" style="max-height: 500px;" />
       </section>
 
-      <!-- 動画を貼るスライド -->
+      <!-- 動画を貼るスライドの例 -->
       <section>
         <h2>動画の例</h2>
         <video data-autoplay controls style="max-height: 500px;">
@@ -48,19 +63,11 @@
         </video>
       </section>
 
-      <!-- スピーカーノート付きスライド（プレゼン時に S キーでスピーカービュー表示） -->
-      <section>
-        <h2>スピーカーノートの例</h2>
-        <p>本編に表示したい内容</p>
-        <aside class="notes">
-          発表者だけが見えるメモをここに書く
-        </aside>
-      </section>
-
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
   <script>
@@ -70,8 +77,8 @@
       progress: true,      // 進捗バー
       center: true,
       transition: 'slide', // none/fade/slide/convex/concave/zoom
-      // PDF化: URL末尾に "?print-pdf" を付けてChromeで印刷→PDF保存
-      plugins: [ RevealNotes, RevealHighlight ]
+      // PDF化: URL末尾に "?pdf" を付けてChromeで印刷→PDF保存
+      plugins: [ RevealMarkdown, RevealNotes, RevealHighlight ]
     });
   </script>
 </body>
