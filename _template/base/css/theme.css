@@ -58,6 +58,12 @@
   /* タイトルバナーの高さ（スライド上部を占める幅） */
   --hsl-title-bar-height: 84px;
 
+  /* バナー付きスライドでの画像・動画の最大高さ。
+     reveal.js既定のスライド高700px からバナー84pxと本文の余白を引いた値。
+     パーセント指定にすると、Markdownの ![]() が <p><img></p> になり
+     親<p>の高さがautoで解決できず効かないため、絶対値で指定する。 */
+  --hsl-media-max-height: 430px;
+
   /* Noto Sans JPを先頭に置き、どの環境でも同じ字形になるようにする */
   --hsl-font-heading: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
   --hsl-font-body: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
@@ -137,12 +143,19 @@
 }
 
 /* タイトルバナー付きスライドでは、バナーと本文の分だけ画像・動画の高さを抑える。
-   これがないと縦長の画像で本文がスライド外にはみ出して切れる。 */
+   これがないと大きい画像で本文がスライド外にはみ出して切れる。
+   個別に大きく見せたいスライドは、そのタグに style="max-height: ..." を
+   直接書けば上書きできる。 */
 .reveal .slides section:has(> h2:first-child) img,
-.reveal .slides section:has(> h2:first-child) video,
-.reveal .slides section:has(> h2:first-child) iframe {
-  max-height: 60%;
+.reveal .slides section:has(> h2:first-child) video {
+  max-height: var(--hsl-media-max-height);
   width: auto;
+  max-width: 100%;
+}
+
+/* iframe（YouTube等）は width 属性でアスペクト比が決まるため width は触らない */
+.reveal .slides section:has(> h2:first-child) iframe {
+  max-height: var(--hsl-media-max-height);
   max-width: 100%;
 }
 
