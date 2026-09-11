@@ -26,6 +26,40 @@ reveal.jsを選んだ理由は、生成AIに「1枚のHTMLスライドを書い�
 - `_template/base/index.html`をそのままAIに読ませて「このテンプレートの`<section>`を増やす形で」と頼むと、デザインが崩れにくい
 - 全体テーマの色やフォントを変えたい場合は`_template/base/css/theme.css`のCSS変数（`--hsl-accent`等）を調整させる
 
+## デザインシステム（配色・レイアウト）
+
+### 配色パレット
+`index.html` の `<html data-theme="...">` で以下の4つから切り替えられます（`_template/base/css/theme.css`に定義）。
+
+| data-theme | アクセントカラー | 補色（差し色） |
+|---|---|---|
+| `blue`（デフォルト） | 青 | 橙 |
+| `green` | 緑 | マゼンタ |
+| `purple` | 紫 | 橘 |
+| `red` | 赤 | 青緑 |
+
+新しい配色を追加したい場合は、`theme.css`に `[data-theme="名前"] { --hsl-accent: ...; --hsl-complement: ...; }` を追加するだけで良い。
+
+### タイトルの色付け
+各スライドの見出し（`h2`）は背景にアクセントカラーを敲いたラベルになっています。表紙（`h1`）は下線でアクセントカラーを使います。
+
+### 補色ユーティリティ
+たまに差し色として使う用途で、`draft.md`内で以下のように使えます（data-markdownはHTMLをそのまま通すため）。
+
+```html
+<span class="hsl-complement-text">重要なテキスト</span>
+<span class="hsl-complement-bg">バッジ風</span>
+```
+
+### 固定コーナー（右上・右下・フッター）
+`index.html` の `.slides` の外側に `hsl-topright` / `hsl-bottomright` / `hsl-footer` の3つのdivがあり、全スライド共通で画面の同じ位置に固定表示されます（reveal.jsは`.slides`だけをスケーリングするため）。
+
+- `hsl-topright`：ロゴなど
+- `hsl-bottomright`：スポンサーロゴやQRコードなど
+- `hsl-footer`：発表者名・イベント名・日付など
+
+使わない場合は `index.html` 側でその `<div>` ごと削除すればよい。
+
 ## PDF化の手順（MVP）
 
 1. GitHub PagesでスライドURLを開く

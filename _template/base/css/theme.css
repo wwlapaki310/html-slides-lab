@@ -1,19 +1,61 @@
-/* html-slides-lab 共通の基礎デザイン
+/* html-slides-lab 共通のデザインシステム
    reveal.js の white テーマの上に重ねて使う想定。
-   各スライドフォルダで上書きしたい場合は index.html 内で
-   このファイルの後に追加のCSSを読み込めばよい。 */
+
+   基本方針:
+   - ベースは 「選んだアクセントカラー(--hsl-accent) + 白 + 黒 + グレー」
+   - たまに補色（--hsl-complement）を差し色として使う
+   - スライドタイトル(h2)の背景にアクセントカラーを敲き、「タイトルの場所に色がつく」デザインにする
+
+   テーマ切り替え:
+   <html data-theme="blue"> のように data-theme 属性を変えるだけで
+   配色を一括変更できる（blue / green / purple / red を初期用意）。
+*/
+
+:root,
+[data-theme="blue"] {
+  --hsl-accent: #2563eb;
+  --hsl-accent-dark: #1e3a8a;
+  --hsl-accent-light: #dbeafe;
+  --hsl-complement: #ea8a1f; /* 青の補色=橙 */
+}
+
+[data-theme="green"] {
+  --hsl-accent: #16a34a;
+  --hsl-accent-dark: #14532d;
+  --hsl-accent-light: #dcfce7;
+  --hsl-complement: #b23cad; /* 緑の補色=マゼンタ */
+}
+
+[data-theme="purple"] {
+  --hsl-accent: #7c3aed;
+  --hsl-accent-dark: #4c1d95;
+  --hsl-accent-light: #ede9fe;
+  --hsl-complement: #d97706; /* 紫の補色=橘 */
+}
+
+[data-theme="red"] {
+  --hsl-accent: #dc2626;
+  --hsl-accent-dark: #7f1d1d;
+  --hsl-accent-light: #fee2e2;
+  --hsl-complement: #0891b2; /* 赤の補色=青緑 */
+}
 
 :root {
-  --hsl-accent: #2563eb;      /* アクセントカラー */
-  --hsl-text: #1f2937;
-  --hsl-bg: #ffffff;
+  /* 白・黒・グレーはテーマ共通で固定 */
+  --hsl-white: #ffffff;
+  --hsl-black: #111827;
+  --hsl-gray-100: #f3f4f6;
+  --hsl-gray-300: #d1d5db;
+  --hsl-gray-500: #6b7280;
+  --hsl-gray-700: #374151;
+
   --hsl-font-heading: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   --hsl-font-body: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
 }
 
 .reveal {
   font-family: var(--hsl-font-body);
-  color: var(--hsl-text);
+  color: var(--hsl-black);
 }
 
 .reveal h1,
@@ -22,19 +64,31 @@
   font-family: var(--hsl-font-heading);
   font-weight: 700;
   text-transform: none; /* reveal標準の大文字化を無効化 */
-  color: var(--hsl-text);
+  color: var(--hsl-black);
 }
 
+/* 表紙タイトル: アクセントカラーの下線で目立たせる */
 .reveal h1 {
   font-size: 2.2em;
-  border-bottom: 4px solid var(--hsl-accent);
+  border-bottom: 6px solid var(--hsl-accent);
   padding-bottom: 0.2em;
   display: inline-block;
 }
 
+/* 各スライドの見出し: 背景にアクセントカラーを敲いたラベル風デザイン */
 .reveal h2 {
-  font-size: 1.6em;
-  color: var(--hsl-accent);
+  display: inline-block;
+  font-size: 1.3em;
+  color: var(--hsl-white);
+  background: var(--hsl-accent);
+  padding: 0.2em 0.6em;
+  border-radius: 6px;
+  margin-bottom: 0.6em;
+}
+
+.reveal h3 {
+  font-size: 1.05em;
+  color: var(--hsl-accent-dark);
 }
 
 .reveal section img {
@@ -51,13 +105,68 @@
 .reveal ul,
 .reveal ol {
   text-align: left;
+  color: var(--hsl-gray-700);
 }
 
-/* フッターに簡単なロゴ/クレジットを入れたい場合の例 */
+.reveal a {
+  color: var(--hsl-accent-dark);
+}
+
+.reveal blockquote {
+  background: var(--hsl-accent-light);
+  border-left: 4px solid var(--hsl-accent);
+  padding: 0.6em 1em;
+  box-shadow: none;
+  width: auto;
+  font-style: normal;
+}
+
+.reveal code {
+  color: var(--hsl-accent-dark);
+}
+
+/* 補色ユーティリティ: 本文中で「ここ一番」を強調したいときに使う */
+.hsl-complement-text {
+  color: var(--hsl-complement);
+  font-weight: 700;
+}
+
+.hsl-complement-bg {
+  background: var(--hsl-complement);
+  color: var(--hsl-white);
+  padding: 0.05em 0.4em;
+  border-radius: 4px;
+}
+
+/* ===== 固定コーナースロット =====
+   .reveal .slides の外側（兄弟要素）に置く想定。
+   reveal.jsはslides側だけをスケーリングするため、
+   このトリは常に同じサイズで画面の固定位置に表示される
+   （ロゴ・発表者名・日付など、全スライド共通の住所表示に向く）。
+   不要なら index.html 側で <div> ごと削除してよい。 */
+.hsl-topright,
+.hsl-bottomright {
+  position: fixed;
+  z-index: 20;
+  max-height: 56px;
+  max-width: 160px;
+  pointer-events: none;
+}
+.hsl-topright { top: 16px; right: 16px; }
+.hsl-bottomright { bottom: 16px; right: 16px; }
+.hsl-topright img,
+.hsl-bottomright img {
+  max-height: 100%;
+  max-width: 100%;
+  display: block;
+}
+
 .hsl-footer {
   position: fixed;
-  bottom: 8px;
-  right: 16px;
-  font-size: 0.4em;
-  opacity: 0.5;
+  left: 24px;
+  bottom: 12px;
+  z-index: 20;
+  font-size: 13px;
+  color: var(--hsl-gray-500);
+  pointer-events: none;
 }

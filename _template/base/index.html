@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-theme="blue">
 <head>
   <meta charset="utf-8" />
   <title>スライドタイトル</title>
@@ -11,14 +11,11 @@
   <!-- コードハイライト用（使わない場合は削除可） -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
 
-  <!-- このリポジトリ共通の基礎デザイン -->
+  <!-- このリポジトリ共通の基礎デザイン（配色・タイトルラベル・コーナースロット） -->
   <link rel="stylesheet" href="../../_template/base/css/theme.css" />
 
   <script>
     // ?pdf で開いた場合に reveal.js の print-pdf 判定用へURLを書き換える。
-    // reveal.js は window.location.search に "print-pdf" という文字列が
-    // 含まれるかどうかで印刷用スタイルを切り替える実装のため、
-    // 覚えやすい "?pdf" を透過的に "print-pdf" へ変換している。
     (function () {
       var params = new URLSearchParams(window.location.search);
       if (params.has('pdf') && !/print-pdf/i.test(window.location.search)) {
@@ -52,13 +49,13 @@
       <!-- 画像を大きく見せたい等、レイアウトを凝りたいスライドは生HTMLで追加してもよい -->
       <section>
         <h2>画像の例（レイアウトを凝る場合）</h2>
-        <img src="assets/sample-image.png" alt="説明テキスト" style="max-height: 500px;" />
+        <img src="assets/sample-image.png" alt="説明テキスト" style="max-height: 480px;" />
       </section>
 
       <!-- 動画を貼るスライドの例 -->
       <section>
         <h2>動画の例</h2>
-        <video data-autoplay controls style="max-height: 500px;">
+        <video data-autoplay controls style="max-height: 480px;">
           <source src="assets/sample-video.mp4" type="video/mp4" />
         </video>
       </section>
@@ -66,17 +63,27 @@
     </div>
   </div>
 
+  <!-- 固定コーナースロット: 全スライド共通で画面に固定表示される（不要なら削除してよい） -->
+  <div class="hsl-topright">
+    <!-- 例: ロゴを置く場合 -->
+    <!-- <img src="../../_template/base/assets/logo.png" alt="logo" /> -->
+  </div>
+  <div class="hsl-bottomright">
+    <!-- 例: スポンサーロゴやQRコードなど -->
+  </div>
+  <div class="hsl-footer">発表者名 / イベント名 / YYYY-MM-DD</div>
+
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
   <script>
     Reveal.initialize({
-      hash: true,          // URLにスライド番号が付き、直接リンク可能
-      controls: true,      // 画面下部の矢印
-      progress: true,      // 進捗バー
+      hash: true,
+      controls: true,
+      progress: true,
       center: true,
-      transition: 'slide', // none/fade/slide/convex/concave/zoom
+      transition: 'slide',
       // PDF化: URL末尾に "?pdf" を付けてChromeで印刷→PDF保存
       plugins: [ RevealMarkdown, RevealNotes, RevealHighlight ]
     });
