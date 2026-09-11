@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>スライドタイトル</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- reveal.js 本体・テーマ（CDN） -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme" />
+  <!-- コードハイライト用（使わない場合は削除可） -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+
+  <!-- このリポジトリ共通の基礎デザイン -->
+  <link rel="stylesheet" href="../../_template/base/css/theme.css" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 表紙 -->
+      <section>
+        <h1>スライドタイトル</h1>
+        <p>サブタイトル・発表者名・日付など</p>
+      </section>
+
+      <!-- テキストスライド -->
+      <section>
+        <h2>見出し</h2>
+        <ul>
+          <li>ポイント1</li>
+          <li>ポイント2</li>
+          <li>ポイント3</li>
+        </ul>
+      </section>
+
+      <!-- 画像を貼るスライド -->
+      <section>
+        <h2>画像の例</h2>
+        <img src="assets/sample-image.png" alt="説明テキスト" style="max-height: 500px;" />
+      </section>
+
+      <!-- 動画を貼るスライド -->
+      <section>
+        <h2>動画の例</h2>
+        <video data-autoplay controls style="max-height: 500px;">
+          <source src="assets/sample-video.mp4" type="video/mp4" />
+        </video>
+      </section>
+
+      <!-- スピーカーノート付きスライド（プレゼン時に S キーでスピーカービュー表示） -->
+      <section>
+        <h2>スピーカーノートの例</h2>
+        <p>本編に表示したい内容</p>
+        <aside class="notes">
+          発表者だけが見えるメモをここに書く
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,          // URLにスライド番号が付き、直接リンク可能
+      controls: true,      // 画面下部の矢印
+      progress: true,      // 進捗バー
+      center: true,
+      transition: 'slide', // none/fade/slide/convex/concave/zoom
+      // PDF化: URL末尾に "?print-pdf" を付けてChromeで印刷→PDF保存
+      plugins: [ RevealNotes, RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
