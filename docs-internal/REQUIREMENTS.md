@@ -15,9 +15,9 @@
 | 6 | HTMLスライドの基礎デザイン(テンプレート)を作る | 基盤 | MVP | 完了(初版) |
 | 7 | 画像・動画を貼れるようにする | 基盤 | MVP | 完了 |
 | 8 | 基礎フォルダ構成を作る | 構成 | MVP | 完了 |
-| 9 | PDF出力 | エクスポート | Phase2 | MVP版(`?pdf`)完了、自動化は未着手 |
-| 10 | Googleスライド出力 | エクスポート | Phase2 | 未着手 |
-| 11 | PPTX出力 | エクスポート | Phase2 | 未着手 |
+| 9 | PDF出力 | エクスポート | Phase2 | 完了（手動`?pdf` + Decktape自動生成CI） |
+| 10 | Googleスライド出力 | エクスポート | Phase2 | 手動フロー確立（PDF/PPTX→ドライブ→Googleスライド） |
+| 11 | PPTX出力 | エクスポート | Phase2 | 完了（`tools/export/pdf_to_pptx.py`、画像PPTX） |
 | 12 | プレゼンテーションモード | 基盤 | MVP | 完了(reveal.js標準機能) |
 | 13 | 動画出力 | エクスポート | Phase3（可能であれば） | 未着手 |
 | 14 | ブラウザ上での細かい修正・追加 | 編集体験 | Phase3（可能であれば） | 未着手 |
@@ -42,15 +42,17 @@ MVP（今すぐ作る）→ Phase2（次にやる）→ Phase3（余力があれ
 
 ### 3.2 PDF出力
 - MVP: 公開URLに`?pdf`を付けてChromeで「PDFに保存」（手動、追加インストール不要）→ **実装済み**
-- Phase2: Decktape（headless Chrome CLI）をGitHub Actionsに組み込み、pushをトリガーに自動でPDFを`exports/`に生成
+- Phase2: Decktape（headless Chrome CLI）をGitHub Actionsに組み込み、pushをトリガーに自動でPDFを`exports/`に生成 → **実装済み**
+  - スクリプト: `tools/export/export-pdf.mjs`（リポジトリルートに一時静的サーバを立て、`YYYY/*/index.html`を全件PDF化）
+  - CI: `.github/workflows/export.yml`（push時に生成→`exports/`へ自動コミット。GitHub Pagesからそのまま配信される）
 
 ### 3.3 PPTX出力
 - reveal.js/HTMLは構造がPowerPointと一致しないため「完全な変換」は困難という点は事前に認識しておく
-- Phase2: Decktapeで生成したPDF or PNG連番を`python-pptx`で1枚1画像のPPTXに変換（編集可能なテキストにはならない点に注意）
+- Phase2: Decktapeで生成したPDFをPyMuPDFで画像化し`python-pptx`で1枚1画像のPPTXに変換 → **実装済み**（`tools/export/pdf_to_pptx.py`、編集可能なテキストにはならない点に注意）
 - 用途が「配布・共有」なら画像PPTXで十分、「PowerPointで編集」が必要なら別途手動移植が必要
 
 ### 3.4 Googleスライド出力
-- Google Slides APIでの完全自動化は複雑なため、MVP〜Phase2では「PPTXをGoogleドライブにアップロード→Googleスライドで開く」手動フローを基本とする
+- Google Slides APIでの完全自動化は複雑なため、MVP〜Phase2では「`exports/`のPDF/PPTXをGoogleドライブにアップロード→Googleスライドで開く」手動フローを基本とする（手順は`tools/export/README.md`）
 - Phase3で余力があれば、Google Drive APIを使った自動アップロードスクリプトを検討
 
 ### 3.5 動画出力（Phase3・可能であれば）
@@ -67,6 +69,7 @@ MVP（今すぐ作る）→ Phase2（次にやる）→ Phase3（余力があれ
 ```
 html-slides-lab/
 ├── README.md                 # 索引（年度・スライド一覧へのリンク）
+├── .nojekyll                 # Jekyllを無効化（_template/ を公開対象に含めるため必須）
 ├── docs-internal/
 │   ├── REQUIREMENTS.md       # このドキュメント
 │   ├── DRAFT_FORMAT.md       # 原稿(draft.md)フォーマット仕様
@@ -83,11 +86,18 @@ html-slides-lab/
 │       ├── draft.md
 │       └── assets/
 ├── 2027/                      # 年度が増えたら追加
+├── exports/                   # CIが生成するPDF/PPTX（YYYY/スライド名.pdf）
 ├── tools/
-│   └── export/                # Phase2: PDF/PPTX変換スクリプト置き場
+│   └── export/                # PDF/PPTX変換スクリプト（export-pdf.mjs / pdf_to_pptx.py）
 └── .github/
-    └── workflows/             # Phase2: 自動PDF生成等のCI
+    └── workflows/
+        └── export.yml         # push時に自動でPDFを生成しexports/にコミットするCI
 ```
+
+### 4.1 `.nojekyll` が必須な理由
+GitHub Pagesは既定でJekyllを通すため、**`_`で始まるディレクトリ（`_template/`）が公開対象から除外される**。
+その状態では全スライドが参照する`_template/base/css/theme.css`が404になり、共通デザインが一切効かない。
+リポジトリ直下の空ファイル`.nojekyll`でJekyll処理を無効化して回避している。**このファイルは消さないこと。**
 
 - 1スライド = 1フォルダ（`YYYY/スライド名/index.html` + `draft.md`）というルールで統一
 - GitHub PagesはリポジトリルートまたはPagesブランチから配信し、`https://wwlapaki310.github.io/html-slides-lab/2026/sample-slide/` の形でアクセスできるようにする
@@ -103,6 +113,10 @@ html-slides-lab/
 - [x] README.mdの索引フォーマット確定
 - [x] `?pdf` エイリアスの実装
 - [x] 原稿(draft.md)フォーマットの策定
-- [ ] KNOWHOW.mdに生成AIプロンプト例・ノウハウを蓄積
-- [ ] Phase2: Decktape導入とGitHub Actions化
-- [ ] Phase3: 動画出力・ブラウザ編集の検証
+- [x] `.nojekyll`の追加（`_template/`がJekyllに除外され共通CSSが404になっていた問題の修正）
+- [x] KNOWHOW.mdに生成AIプロンプト例・ノウハウを蓄積
+- [x] Phase2: Decktape導入とGitHub Actions化（`tools/export/` + `.github/workflows/export.yml`）
+- [x] Phase2: PPTX変換スクリプトの実装
+- [ ] Phase3: 動画出力（Playwright + ffmpeg）の検証
+- [ ] Phase3: ブラウザ編集（github.dev運用で不足が出たら専用エディタを検討）
+- [ ] Phase3: Google Drive APIによるアップロード自動化
