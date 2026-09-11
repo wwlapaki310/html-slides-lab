@@ -17,9 +17,12 @@ HTML構造を毎回生成させる必要がなくなる（トークン消費も�
 | 見出し | `##`（スライドタイトル） | `#`は表紙用にindex.html側で使うため、draft.md内では基本`##`以降を使う |
 | 箇条書き | 標準Markdownの `- ` | |
 | 画像 | `![alt](assets/ファイル名)` | 相対パスは `index.html` から見た位置 |
-| 動画 | `<video>` タグを直接記述 | data-markdownはHTMLを素通しするため生HTMLでOK |
+| 動画（ローカル） | `<video>` タグを直接記述 | data-markdownはHTMLを素通しするため生HTMLでOK |
+| 動画（YouTube等） | `<iframe src="https://www.youtube.com/embed/動画ID">` を直接記述 | 同上、iframeもそのまま埋め込める |
 | コードブロック | \`\`\`言語名 ... \`\`\` | シンタックスハイライトはRevealHighlightプラグインが担当 |
 | スピーカーノート | `Note:` から始まる行以降 | 発表者だけに見える。空行までではなくスライド区切りまでがノート扱い |
+| フラグメント（1つずつ表示） | 表示させたい要素に `class="fragment"` を付与 | `<li class="fragment">...</li>` のように使う |
+| スライド単位の属性指定 | 区切り(`---`)直後の1行目に `<!-- .slide: 属性="値" -->` | 例: `<!-- .slide: data-background-color="#1e3a8a" -->` でそのスライドだけ背景色変更。`data-background-image`も同様に使える |
 
 ## 使い分けの方針
 
@@ -27,8 +30,11 @@ HTML構造を毎回生成させる必要がなくなる（トークン消費も�
 - **本編のテキスト中心スライド（見出し＋箇条書き＋画像＋コード程度）**：`draft.md` に書き、生成AIには「draft.mdのこの部分を追記/修正して」と依頼する
 
 この役割分担により、生成AIへの依頼が「原稿執筆モード（draft.md編集）」と
-「デザインモード（index.html編集）」の2種類にはっきり分かれ、依頼internalが安定する。
+「デザインモード（index.html編集）」の2種類にはっきり分かれ、依頼が安定する。
 
 ## サンプル
 
-`_template/base/draft.md` に実例がある。新しいスライドを作る際はこれをコピーして書き換える。
+- `_template/base/draft.md`：最小限の実例
+- `2026/feature-showcase/draft.md`：配色パレット・SVG図解・画像・YouTube埋め込み・フラグメント・背景色変更・スピーカーノートなど、対応機能を一通り使ったフル実例（[公開ページ](https://wwlapaki310.github.io/html-slides-lab/2026/feature-showcase/)）
+
+新しいスライドを作る際は、シンプルに始めたいなら`_template/base`を、機能を参考にしたいなら`2026/feature-showcase`をコピーして書き換える。
