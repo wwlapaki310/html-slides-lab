@@ -14,6 +14,7 @@ GitHub Pagesで各スライドをそのままブラウザ閲覧・プレゼン�
 
 | タイトル | 公開URL | 作成日 |
 |---|---|---|
+| 機能ショーケース（全機能デモ） | [開く](https://wwlapaki310.github.io/html-slides-lab/2026/feature-showcase/) | 2026-09-11 |
 | サンプルスライド | [開く](https://wwlapaki310.github.io/html-slides-lab/2026/sample-slide/) | 2026-09-11 |
 
 > 新しいスライドを追加したら、この表に1行追記してください。
@@ -32,7 +33,7 @@ html-slides-lab/
 
 ## 使い方（新しいスライドを作る）
 
-1. `_template/base/` を `YYYY/スライド名/` にコピーする
+1. `_template/base/`（または`2026/feature-showcase/`）を `YYYY/スライド名/` にコピーする
 2. 本編のテキストは `draft.md` を生成AIと一緒に編集する（フォーマットは[DRAFT_FORMAT.md](docs-internal/DRAFT_FORMAT.md)を参照）
 3. 表紙やデザインを凝りたいスライドは `index.html` 内に直接 `<section>` を書く
 4. 画像・動画は同フォルダの `assets/` に置いて相対パスで参照する
@@ -45,4 +46,4 @@ html-slides-lab/
 
 ## GitHub Pages
 
-Settings → Pages で `main` ブランチ / `/ (root)` を公開元に設定してください。
+公開設定済み（`main`ブランチ / `/ (root)`）。
